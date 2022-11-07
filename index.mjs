@@ -88,7 +88,7 @@ app.delete('/movies', (req, res) => {
     if (movieIndex !== -1) {
       Object.assign(
         movies,
-        movies.filter((movie) => movie.id !== req.body?.id)
+        movies.filter((movie) => movie.id !== Number(req.query?.id))
       );
       writeFileSync('movies.json', JSON.stringify(movies, null, 2));
       res.status(200).json({
