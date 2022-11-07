@@ -68,8 +68,8 @@ PUT /movies -> Movie[]
 DELETE /movies -> Movie[]
 ```
 
-> requires body to be a Movie{}
+> requires id from query
 
-> pushes Movie{} to database
+> tries to delete to Movie{} from database
 
-> if exists updates replaces the new values from object
+> if not exists returns status 400
