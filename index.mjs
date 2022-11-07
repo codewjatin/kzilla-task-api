@@ -82,7 +82,9 @@ app.put('/movies', async (req, res) => {
 
 app.delete('/movies', (req, res) => {
   try {
-    const movieIndex = movies.findIndex((movie) => movie.id === req.query?.id);
+    const movieIndex = movies.findIndex(
+      (movie) => movie.id === Number(req.query?.id)
+    );
     if (movieIndex !== -1) {
       Object.assign(
         movies,
