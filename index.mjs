@@ -40,11 +40,32 @@ app.post('/movies', (req, res) => {
   }
 });
 
+app.post('/rating', (req, res) => {
+  try {
+    const movieIndex = movies.findIndex(
+      (movie) => movie.id === Number(req.query?.id)
+    );
+    if (movieIndex !== -1) {
+      movies[movieIndex].imdbRating = req.query?.rating;
+      writeFileSync('movies.json', JSON.stringify(movies, null, 2));
+      res.status(200).json({
+        message: 'data updated successfully',
+        status: 200,
+        data: movies,
+      });
+    } else {
+      res.status(400).json({ message: 'movie id not found', status: 400 });
+    }
+  } catch {
+    res.status(400).json({ message: 'some error occured', status: 400 });
+  }
+});
+
 app.put('/movies', async (req, res) => {
   try {
     const movieIndex = movies.findIndex((movie) => movie.id === req.body?.id);
     if (movieIndex !== -1) {
-      movies[movieIndex] = req.body;
+      movies[movieIndex] = { ...movies[movieIndex], ...req.body };
     } else {
       movies.push(req.body);
     }
@@ -61,21 +82,21 @@ app.put('/movies', async (req, res) => {
 
 app.delete('/movies', (req, res) => {
   try {
-    const movieIndex = movies.findIndex((movie) => movie.id === req.body?.id);
+    const movieIndex = movies.findIndex((movie) => movie.id === req.query?.id);
     if (movieIndex !== -1) {
       Object.assign(
         movies,
         movies.filter((movie) => movie.id !== req.body?.id)
       );
+      writeFileSync('movies.json', JSON.stringify(movies, null, 2));
+      res.status(200).json({
+        message: 'data updated successfully',
+        status: 200,
+        data: movies,
+      });
     } else {
       res.status(400).json({ message: 'movie id not found', status: 400 });
     }
-    writeFileSync('movies.json', JSON.stringify(movies, null, 2));
-    res.status(200).json({
-      message: 'data updated successfully',
-      status: 200,
-      data: movies,
-    });
   } catch {
     res.status(400).json({ message: 'some error occured', status: 400 });
   }
